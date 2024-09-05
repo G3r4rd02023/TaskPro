@@ -1,3 +1,6 @@
+using Microsoft.EntityFrameworkCore;
+using TaskPro.Data;
+
 namespace TaskPro
 {
     public class Program
@@ -8,6 +11,10 @@ namespace TaskPro
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
+            builder.Services.AddDbContext<DataContext>(o =>
+            {
+                o.UseSqlServer(builder.Configuration.GetConnectionString("ConexionSQL"));
+            });
 
             var app = builder.Build();
 
