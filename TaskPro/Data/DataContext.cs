@@ -1,9 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using TaskPro.Data.Entidades;
 
 namespace TaskPro.Data
 {
-    public class DataContext : DbContext
+    public class DataContext : IdentityDbContext<Usuario>
     {
         public DataContext(DbContextOptions<DataContext> options) : base(options)
         {

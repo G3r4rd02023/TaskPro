@@ -1,10 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TaskPro.Data;
 using TaskPro.Data.Entidades;
 
 namespace TaskPro.Controllers
 {
+    [Authorize(Roles = "Administrador")]
     public class ProyectosController : Controller
     {
         private readonly DataContext _context;
