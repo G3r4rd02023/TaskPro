@@ -54,6 +54,11 @@ namespace TaskPro.Services
             await _userManager.AddToRoleAsync(user, roleName);
         }
 
+        public async Task<IdentityResult> ChangePasswordAsync(Usuario user, string oldPassword, string newPassword)
+        {
+            return await _userManager.ChangePasswordAsync(user, oldPassword, newPassword);
+        }
+
         public async Task CheckRoleAsync(string roleName)
         {
             bool roleExists = await _roleManager.RoleExistsAsync(roleName);
@@ -69,6 +74,12 @@ namespace TaskPro.Services
         public async Task<Usuario> GetUserAsync(string email)
         {
             return await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
+        }
+
+        public async Task<Usuario> GetUserAsync(Guid userId)
+        {
+            return await _context.Users
+            .FirstOrDefaultAsync(u => u.Id == userId.ToString());
         }
 
         public async Task<bool> IsUserInRoleAsync(Usuario user, string roleName)
@@ -88,6 +99,11 @@ namespace TaskPro.Services
         public async Task LogoutAsync()
         {
             await _signInManager.SignOutAsync();
+        }
+
+        public async Task<IdentityResult> UpdateUserAsync(Usuario user)
+        {
+            return await _userManager.UpdateAsync(user);
         }
     }
 }

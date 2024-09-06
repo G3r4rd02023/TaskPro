@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using TaskPro.Data.Entidades;
-using TaskPro.Migrations;
 using TaskPro.Models;
 
 namespace TaskPro.Services
@@ -22,5 +21,11 @@ namespace TaskPro.Services
         Task LogoutAsync();
 
         Task<Usuario> AddUserAsync(AddUserViewModel model);
+
+        Task<IdentityResult> ChangePasswordAsync(Usuario user, string oldPassword, string newPassword);
+
+        Task<IdentityResult> UpdateUserAsync(Usuario user);
+
+        Task<Usuario> GetUserAsync(Guid userId);
     }
 }

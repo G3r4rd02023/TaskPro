@@ -9,3 +9,34 @@
         background-repeat: no-repeat;
     }
 </style>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+@if (TempData["AlertMessage"] != null)
+{
+    <script>
+        $(function () {
+            Swal.fire({
+                title: '¡Éxito!',
+                text: '@TempData["AlertMessage"]',
+                icon: 'success',
+                confirmButtonText: 'Aceptar'
+            });
+        });
+    </script>
+}
+
+@if (TempData["ErrorMessage"] != null)
+{
+    <script>
+        $(function () {
+            Swal.fire({
+                title: '¡Error!',
+                text: '@TempData["ErrorMessage"]',
+                icon: 'warning',
+                confirmButtonText: 'Aceptar'
+            });
+        });
+    </script>
+}

@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using TaskPro.Data;
 using TaskPro.Data.Entidades;
 using TaskPro.Data.Enums;
+using TaskPro.Migrations;
 using TaskPro.Models;
 using TaskPro.Services;
 
@@ -123,6 +124,67 @@ namespace TaskPro.Controllers
                 }
             }
 
+            return View(model);
+        }
+
+        public async Task<IActionResult> ChangeUser()
+        {
+            Usuario user = await _servicioUsuario.GetUserAsync(User.Identity!.Name!);
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            EditUserViewModel model = new()
+            {
+                Nombre = user.Nombre,
+                Apellidos = user.Apellidos,
+                URLFoto = user.URLFoto,
+                Id = user.Id,
+            };
+
+            return View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ChangeUser(EditUserViewModel model, IFormFile? file)
+        {
+            if (ModelState.IsValid)
+            {
+                // Manejar la carga de la imagen solo si hay un archivo adjunto
+                if (file != null)
+                {
+                    var uploadParams = new ImageUploadParams()
+                    {
+                        File = new FileDescription(file.FileName, file.OpenReadStream()),
+                        AssetFolder = "tecnologers"
+                    };
+
+                    var uploadResult = await _cloudinary.UploadAsync(uploadParams);
+
+                    // Verificar si la carga fue exitosa
+                    if (uploadResult.Error != null)
+                    {
+                        ModelState.AddModelError(string.Empty, "Error al cargar la imagen.");
+                        return View(model);
+                    }
+
+                    var urlImagen = uploadResult.SecureUrl.ToString();
+                    model.URLFoto = urlImagen;
+                }
+
+                Usuario user = await _servicioUsuario.GetUserAsync(User.Identity!.Name!);
+
+                user.Nombre = model.Nombre;
+                user.Apellidos = model.Apellidos;
+                user.Id = model.Id;
+                user.URLFoto = model.URLFoto ?? user.URLFoto;
+
+                await _servicioUsuario.UpdateUserAsync(user);
+                TempData["AlertMessage"] = "Los datos del usuario se actualizaron exitosamente";
+                return RedirectToAction("Index", "Home");
+            }
             return View(model);
         }
     }
