@@ -1,3 +1,4 @@
+using CloudinaryDotNet;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using TaskPro.Data;
@@ -38,6 +39,16 @@ namespace TaskPro
                 options.LoginPath = "/Account/NotAuthorized";
                 options.AccessDeniedPath = "/Account/NotAuthorized";
             });
+
+            var cloudinaryConfig = builder.Configuration.GetSection("Cloudinary");
+
+            var cloudinary = new Cloudinary(new Account(
+              cloudinaryConfig["CloudName"],
+              cloudinaryConfig["ApiKey"],
+              cloudinaryConfig["ApiSecret"]
+              ));
+
+            builder.Services.AddSingleton(cloudinary);
 
             var app = builder.Build();
 

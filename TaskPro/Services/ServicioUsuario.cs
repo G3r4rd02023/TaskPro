@@ -2,7 +2,6 @@
 using Microsoft.EntityFrameworkCore;
 using TaskPro.Data;
 using TaskPro.Data.Entidades;
-using TaskPro.Migrations;
 using TaskPro.Models;
 
 namespace TaskPro.Services
@@ -25,6 +24,29 @@ namespace TaskPro.Services
         public async Task<IdentityResult> AddUserAsync(Usuario user, string password)
         {
             return await _userManager.CreateAsync(user, password);
+        }
+
+        public async Task<Usuario> AddUserAsync(AddUserViewModel model)
+        {
+            Usuario user = new()
+            {
+                Email = model.Username,
+                UserName = model.Username,
+                Nombre = model.Nombre,
+                Apellidos = model.Apellidos,
+                URLFoto = model.URLFoto,
+                TipoUsuario = model.TipoUsuario
+            };
+
+            IdentityResult result = await _userManager.CreateAsync(user, model.Password);
+            if (result != IdentityResult.Success)
+            {
+                return null!;
+            }
+
+            Usuario newUser = await GetUserAsync(model.Username);
+            await AddUserToRoleAsync(newUser, user.TipoUsuario.ToString());
+            return newUser;
         }
 
         public async Task AddUserToRoleAsync(Usuario user, string roleName)

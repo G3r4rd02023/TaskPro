@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using TaskPro.Data.Entidades;
+using TaskPro.Migrations;
 using TaskPro.Models;
 
 namespace TaskPro.Services
@@ -19,5 +20,7 @@ namespace TaskPro.Services
         Task<SignInResult> LoginAsync(LoginViewModel model);
 
         Task LogoutAsync();
+
+        Task<Usuario> AddUserAsync(AddUserViewModel model);
     }
 }
