@@ -1,0 +1,107 @@
+﻿@model IEnumerable<TaskPro.Data.Entidades.Usuario>
+@{
+    ViewData["Title"] = "Index";
+}
+
+@section Estilos {
+    <link href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css" rel="stylesheet" />
+}
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+@if (TempData["AlertMessage"] != null)
+{
+    <script>
+        $(function () {
+            Swal.fire({
+                title: '¡Éxito!',
+                text: '@TempData["AlertMessage"]',
+                icon: 'success',
+                confirmButtonText: 'Aceptar'
+            });
+        });
+    </script>
+}
+
+@if (TempData["ErrorMessage"] != null)
+{
+    <script>
+        $(function () {
+            Swal.fire({
+                title: '¡Error!',
+                text: '@TempData["ErrorMessage"]',
+                icon: 'warning',
+                confirmButtonText: 'Aceptar'
+            });
+        });
+    </script>
+}
+
+<p>
+    <a onclick="showInPopup('@Url.Action("Create", "Usuarios", new { id = 0 })', '')"
+       class="btn btn-sm btn-primary text-white mt-2"><i class="oi oi-plus"></i> Nuevo Administrador</a>
+</p>
+
+<div class="col-md-12">
+    <div class="card">
+        <div class="card-header text-center">
+            <div class="card-header text-center">
+                <img src="/images/logo TaskPro.png" style="width: 50px; height: auto;" />
+            </div>
+        </div>
+        <div class="card-body ">
+            <h5 class="card-title text-center"> Usuarios</h5>
+            <table id="proyecto" class="table table-hover ">
+                <thead>
+                    <tr class=" table-secondary">
+                       
+                        <th scope="col">Nombre</th>
+                        <th scope="col">Email</th>
+                        <th scope="col">Rol</th>
+                        <th scope="col">Foto</th>
+                        
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr class=" table-secondary">
+                            
+                            <td>@Html.DisplayFor(modelItem => item.NombreCompleto)</td>
+                            <td>@Html.DisplayFor(modelItem => item.UserName)</td>
+                            <td>@Html.DisplayFor(modelItem => item.TipoUsuario)</td>
+                            <td>
+                                <img src="@item.URLFoto" style="width:100px; height:100px; border-radius:50px" />
+                            </td>
+                            
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<partial name="_MostrarModal" />
+
+@section Scripts {
+
+    <script src="~/js/showmodal.js"></script>
+
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            $('#proyecto').DataTable(
+                {
+                    "language": {
+                        url: "https://cdn.datatables.net/plug-ins/1.11.5/i18n/es-ES.json"
+                    },
+                });
+        });
+    </script>
+
+   
+
+}

@@ -1,0 +1,43 @@
+﻿@model TaskPro.Models.AddUserViewModel
+@{
+    ViewData["Title"] = "Create";
+    Layout = "~/Views/Shared/ModalLayout.cshtml";
+}
+
+<div class=" col-md-12">
+    <div class=" card">
+        <div class=" card-header text-center">
+            <h5> Crear Administrador</h5>
+        </div>
+        <div class=" card-body">
+            <form asp-action="Create" method="post" enctype="multipart/form-data">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <input type="hidden" asp-for="Id" />
+                <input type="hidden" asp-for="TipoUsuario" />
+
+                <input class="form-control mb-3" type="text" placeholder="Primer Nombre" asp-for="Nombre" required />
+                <input class="form-control mb-3" type="text" placeholder="Segundo Nombre" asp-for="Apellidos" required />
+
+                <input class="form-control mb-3" type="email" placeholder="Email" required asp-for="Username" />
+                <input class="form-control mb-3" type="password" placeholder="Contraseña" required asp-for="Password" />
+                <input class="form-control mb-3" type="password" placeholder="Confirmar Contraseña " asp-for="PasswordConfirm" required />
+                <div class="form-group">
+                    <label>Imagen</label>
+                    <input type="file" class="form-control mb-3" name="file" asp-for="URLFoto">
+                </div>
+
+                <div class=" card-footer ">
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-sm btn-success"><i class="oi oi-check"></i> Guardar</button>
+                        <button type="button" class="btn btn-sm btn-primary" data-bs-dismiss="modal"><i class="oi oi-ban"></i> Cancelar</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
+
