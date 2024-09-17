@@ -12,6 +12,8 @@
         <div class=" card-body">
             <form asp-action="Create" method="post" enctype="multipart/form-data">
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <input type="hidden" asp-for="Tareas" />
+                <input type="hidden" asp-for="Usuario" />
 
                 <div class="form-group">
                     <label></label>

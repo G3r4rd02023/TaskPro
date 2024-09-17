@@ -1,0 +1,60 @@
+﻿@model TaskPro.Data.Entidades.Tarea
+@{
+    ViewData["Title"] = "EditTarea";
+    Layout = "~/Views/Shared/ModalLayout.cshtml";
+}
+
+<div class=" col-md-12">
+    <div class=" card">
+        <div class=" card-header text-center">
+            <h5> Editar Tarea</h5>
+        </div>
+        <div class=" card-body">
+            <form asp-action="EditTarea" method="post" enctype="multipart/form-data">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <input type="hidden" asp-for="Id" />
+                <input type="hidden" asp-for="ProyectoId" />
+
+                <div class="form-group">
+                    <label></label>
+                    <input asp-for="Nombre" class="form-control" placeholder="Nombre" />
+                    <span asp-validation-for="Nombre" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label></label>
+                    <input asp-for="Descripcion" class="form-control" placeholder="Descripcion" />
+                    <span asp-validation-for="Descripcion" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <br />
+                    <label>Seleccione la fecha de vencimiento : </label>
+                    <input asp-for="FechaVencimiento" class="form-control" type="date" />
+                    <span asp-validation-for="FechaVencimiento" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label for="Prioridad">Prioridad</label>
+                    <select asp-for="Prioridad" class="form-control">
+                        <option value="Baja">Baja</option>
+                        <option value="Media">Media</option>
+                        <option value="Alta">Alta</option>
+                    </select>
+                    <span asp-validation-for="Prioridad" class="text-danger"></span>
+                </div>
+
+                <div class=" card-footer ">
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-sm btn-success"><i class="oi oi-check"></i> Guardar</button>
+                        <button type="button" class="btn btn-sm btn-primary" data-bs-dismiss="modal"><i class="oi oi-ban"></i> Cancelar</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

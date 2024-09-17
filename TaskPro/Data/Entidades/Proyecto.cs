@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace TaskPro.Data.Entidades
 {
@@ -13,5 +14,9 @@ namespace TaskPro.Data.Entidades
         public DateTime Inicio { get; set; }
 
         public DateTime Final { get; set; }
+
+        public Usuario? Usuario { get; set; }
+
+        public ICollection<Tarea> Tareas { get; set; } = null!;
     }
 }

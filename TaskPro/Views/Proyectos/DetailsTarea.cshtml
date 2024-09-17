@@ -1,0 +1,47 @@
+﻿@model TaskPro.Data.Entidades.Tarea
+@{
+    ViewData["Title"] = "DetailsTarea";
+    Layout = "~/Views/Shared/ModalLayout.cshtml";
+}
+
+<h4>Tarea</h4>
+<hr />
+<dl class="row ">
+    <dt class="col-sm-2">
+        @Html.DisplayNameFor(model => model.Nombre)
+    </dt>
+    <dd class="col-sm-10">
+        <strong>@Html.DisplayFor(model => model.Nombre)</strong>
+    </dd>
+    <dt class="col-sm-2">
+        @Html.DisplayNameFor(model => model.Descripcion)
+    </dt>
+    <dd class="col-sm-10">
+        <strong>@Html.DisplayFor(model => model.Descripcion)</strong>
+    </dd>
+    <dt class="col-sm-2">
+        Registro
+    </dt>
+    <dd class="col-sm-10">
+        <strong>@Model.FechaRegistro.ToString("dd/MM/yyyy")</strong>
+    </dd>
+    <dt class="col-sm-2">
+        Vencimiento
+    </dt>
+    <dd class="col-sm-10">
+        <strong>@Model.FechaVencimiento.ToString("dd/MM/yyyy")</strong>
+    </dd>
+    <dt class="col-sm-2">
+        @Html.DisplayNameFor(model => model.Estado)
+    </dt>
+    <dd class="col-sm-10">
+        <strong>@Html.DisplayFor(model => model.Estado)</strong>
+    </dd>
+    <dt class="col-sm-2">
+        @Html.DisplayNameFor(model => model.Prioridad)
+    </dt>
+    <dd class="col-sm-10">
+        <strong>@Html.DisplayFor(model => model.Prioridad)</strong>
+    </dd>
+</dl>
+<hr />

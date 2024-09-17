@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Mvc;
 using TaskPro.Data;
 using TaskPro.Data.Entidades;
 using TaskPro.Data.Enums;
-using TaskPro.Migrations;
 using TaskPro.Models;
 using TaskPro.Services;
 
@@ -184,6 +183,37 @@ namespace TaskPro.Controllers
                 await _servicioUsuario.UpdateUserAsync(user);
                 TempData["AlertMessage"] = "Los datos del usuario se actualizaron exitosamente";
                 return RedirectToAction("Index", "Home");
+            }
+            return View(model);
+        }
+
+        public IActionResult ChangePassword()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ChangePassword(ChangePasswordViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var user = await _servicioUsuario.GetUserAsync(User.Identity!.Name!);
+                if (user != null)
+                {
+                    var result = await _servicioUsuario.ChangePasswordAsync(user, model.OldPassword, model.NewPassword);
+                    if (result.Succeeded)
+                    {
+                        return RedirectToAction("ChangeUser");
+                    }
+                    else
+                    {
+                        ModelState.AddModelError(string.Empty, result.Errors.FirstOrDefault()!.Description);
+                    }
+                }
+                else
+                {
+                    ModelState.AddModelError(string.Empty, "Usuario no encontrado.");
+                }
             }
             return View(model);
         }
