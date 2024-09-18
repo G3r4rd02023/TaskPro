@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using TaskPro.Data;
 using TaskPro.Data.Entidades;
@@ -13,11 +14,13 @@ namespace TaskPro.Controllers
     {
         private readonly DataContext _context;
         private readonly IServicioUsuario _usuario;
+        private readonly IHubContext<NotificationHub> _hubContext;
 
-        public ProyectosController(DataContext context, IServicioUsuario usuario)
+        public ProyectosController(DataContext context, IServicioUsuario usuario, IHubContext<NotificationHub> hubContext)
         {
             _context = context;
             _usuario = usuario;
+            _hubContext = hubContext;
         }
 
         public async Task<IActionResult> Index()
@@ -35,7 +38,9 @@ namespace TaskPro.Controllers
 
             Proyecto proyecto = new()
             {
-                Usuario = user
+                Usuario = user,
+                Inicio = DateTime.Now,
+                Final = DateTime.Now.AddDays(15)
             };
             return View(proyecto);
         }
@@ -54,6 +59,7 @@ namespace TaskPro.Controllers
                 proyecto.Usuario = user;
                 _context.Add(proyecto);
                 await _context.SaveChangesAsync();
+                await _hubContext.Clients.All.SendAsync("ReceiveNotification", "Esta es una notificación en tiempo real");
                 TempData["AlertMessage"] = "Proyecto creado exitosamente";
                 return RedirectToAction("Index");
             }
@@ -144,6 +150,7 @@ namespace TaskPro.Controllers
                 Estado = Estado.Pendiente,
                 Proyecto = proyecto,
                 ProyectoId = proyecto.Id,
+                FechaVencimiento = DateTime.Now.AddDays(10)
             };
 
             return View(tarea);
@@ -233,6 +240,29 @@ namespace TaskPro.Controllers
             _context.Tareas.Remove(tarea);
             await _context.SaveChangesAsync();
             TempData["AlertMessage"] = "Tarea eliminada exitosamente";
+            return RedirectToAction(nameof(Index));
+        }
+
+        public async Task<IActionResult> CompletarTarea(int? id)
+        {
+            if (id == null || _context.Tareas == null)
+            {
+                return NotFound();
+            }
+
+            var tarea = await _context.Tareas
+               .FirstOrDefaultAsync(m => m.Id == id);
+
+            if (tarea == null)
+            {
+                return NotFound();
+            }
+
+            tarea.Estado = Estado.Completada;
+
+            _context.Tareas.Update(tarea);
+            await _context.SaveChangesAsync();
+            TempData["AlertMessage"] = "La tarea ha sido marcada como completada";
             return RedirectToAction(nameof(Index));
         }
 

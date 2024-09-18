@@ -86,8 +86,7 @@
                 <thead>
                     <tr class=" table-secondary">
                         <th scope="col">#</th>
-                        <th scope="col">Nombre</th>
-                        @* <th scope="col">Fecha de registro</th> *@
+                        <th scope="col">Nombre</th>                       
                         <th scope="col">Vencimiento</th>
                         <th scope="col">Estado</th>
                         <th scope="col">Prioridad</th>
@@ -100,17 +99,38 @@
                         <tr class=" table-secondary">
                             <th scope="row">@item.Id</th>
                             <td>@Html.DisplayFor(modelItem => item.Nombre)</td>
-                            @* <td>@item.FechaRegistro.ToString("dd/MM/yyyy")</td> *@
+                            
                             <td>@item.FechaVencimiento.ToString("dd/MM/yyyy")</td>
-                            <td>@Html.DisplayFor(modelItem => item.Estado)</td>
-                            <td>@Html.DisplayFor(modelItem => item.Prioridad)</td>
+                            @if(@item.Estado == TaskPro.Data.Enums.Estado.Completada)
+                            {
+                                <td class="text-success"><strong>@Html.DisplayFor(modelItem => item.Estado)</strong></td>
+                            }
+                            else
+                            {
+                                <td class="text-danger"><strong>@Html.DisplayFor(modelItem => item.Estado)</strong></td>
+                            }
+                            @if (@item.Prioridad == TaskPro.Data.Enums.Prioridad.Alta)
+                            {
+                                <td class="text-danger"><strong>@Html.DisplayFor(modelItem => item.Prioridad)</strong></td>
+                            }
+                            else if (@item.Prioridad == TaskPro.Data.Enums.Prioridad.Media)
+                            {
+                                <td class="text-warning"><strong>@Html.DisplayFor(modelItem => item.Prioridad)</strong></td>
+                            }
+                            else
+                            {
+                                <td class="text-success"><strong>@Html.DisplayFor(modelItem => item.Prioridad)</strong></td>
+                            }                           
                             <td>
                                 <a onclick="showInPopup('@Url.Action("EditTarea", "Proyectos", new { id = item.Id }, Context.Request.Scheme)' ,
-                    '')" class="btn btn-outline-warning btn-sm"><i class="oi oi-pencil"></i> </a>
+                    '')" class="btn btn-outline-warning btn-sm"><i class="oi oi-pencil"></i> </a>                             
                                 <a onclick="showInPopup('@Url.Action("DetailsTarea", "Proyectos", new { id = item.Id }, Context.Request.Scheme)' ,
                     '')" class="btn btn-outline-info btn-sm"><i class="oi oi-clipboard"></i> </a>
                                 <button data-id="@item.Id" class="btn btn-outline-danger btn-sm deleteItem">
                                     <i class="oi oi-trash"></i>
+                                </button>
+                                <button data-id="@item.Id" class="btn btn-outline-success btn-sm completeItem">
+                                    <i class="oi oi-check"></i>
                                 </button>
                             </td>
                         </tr>
@@ -157,6 +177,29 @@
                     if (result.isConfirmed) {
                         // Redirigir a la acción DeleteTarea
                         window.location.href = '/Proyectos/DeleteTarea/' + taskId;
+                    }
+                });
+            });
+
+            // Delegar el evento click para elementos creados dinámicamente
+            $(document).on('click', '.completeItem', function (event) {
+                event.preventDefault();
+
+                const completeId = $(this).data('id'); // Obtener el id de la tarea desde el botón
+
+                Swal.fire({
+                    title: '¿Estás seguro?',
+                    text: "¡Desea marcar como completada esta tarea?!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Sí, confirmar',
+                    cancelButtonText: 'Cancelar'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        // Redirigir a la acción DeleteTarea
+                        window.location.href = '/Proyectos/CompletarTarea/' + completeId;
                     }
                 });
             });

@@ -48,6 +48,8 @@ namespace TaskPro
               cloudinaryConfig["ApiSecret"]
               ));
 
+            builder.Services.AddSignalR();
+            builder.Services.AddHostedService<TaskNotificationService>();
             builder.Services.AddSingleton(cloudinary);
 
             var app = builder.Build();
@@ -79,6 +81,8 @@ namespace TaskPro
             app.UseRouting();
             app.UseAuthentication();
             app.UseAuthorization();
+
+            app.MapHub<NotificationHub>("/notificationHub");
 
             app.MapControllerRoute(
                 name: "default",
